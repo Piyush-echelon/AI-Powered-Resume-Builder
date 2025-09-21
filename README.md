@@ -8,6 +8,8 @@ Create professional, ATS-friendly resumes in minutes with the power of **LangCha
 ## 🚀 Hosted on Streamlit
 👉 [Try it here](https://airesumebuilde-nf3kjw8iy6mawkvt588hwz.streamlit.app/)
 
+<img width="1910" height="909" alt="image" src="https://github.com/user-attachments/assets/32b66320-75da-419d-94e9-9a2504b3e90b" />
+
 ---
 
 ## ✨ Features
