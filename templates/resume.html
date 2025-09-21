@@ -1,0 +1,147 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Resume</title>
+  <style>
+    @page { size: A4; margin: 24mm 18mm; }
+    body { font-family: "Georgia", "Times New Roman", serif; color: #111; }
+    h1, h2, h3 { margin: 0; }
+    .name { text-align: center; font-size: 26px; letter-spacing: 1px; text-transform: uppercase; }
+    .contact { text-align: center; font-size: 12px; margin-top: 4px; }
+    .rule { border-bottom: 1px solid #333; margin: 8px 0 6px; }
+    .section-title { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+    .row { display: flex; justify-content: space-between; }
+    .left { width: 70%; }
+    .right { width: 28%; text-align: right; }
+    .small { font-size: 11px; }
+    .bul { margin-top: 4px; }
+    .bul li { margin-bottom: 4px; }
+    .edu, .exp, .proj, .cert, .additional, .skills { margin-top: 10px; }
+    .skills-table { width: 100%; border-collapse: collapse; }
+    .skills-table td { vertical-align: top; padding: 2px 6px 2px 0; }
+    a { color: #111; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  {% set p = d.personal %}
+
+  <div class="name">{{ (p.first_name ~ " " ~ p.last_name) | trim }}</div>
+  <div class="contact small">
+    {% if p.email %}{{ p.email }}{% endif %}
+    {% if p.email and p.phone %} | {% endif %}
+    {% if p.phone %}{{ p.phone }}{% endif %}
+    {% if (p.email or p.phone) and (p.links and p.links|length > 0) %} | {% endif %}
+    {% for link in p.links %}
+      <span><a href="{{ link }}">{{ link.split('://')[-1] }}</a>{% if not loop.last %} | {% endif %}</span>
+    {% endfor %}
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- Education -->
+  {% if d.education and d.education|length > 0 %}
+  <div class="section-title">Education</div>
+  <div class="rule"></div>
+  <div class="edu">
+    {% for e in d.education %}
+      <div class="row small">
+        <div class="left"><strong>{{ e.institution }}</strong>{% if e.degree %} — {{ e.degree }}{% endif %}</div>
+        <div class="right">{{ e.location }}</div>
+      </div>
+      <div class="row small" style="margin-top:2px;">
+        <div class="left">{% if e.percentage_or_gpa %}Percentage / GPA: {{ e.percentage_or_gpa }}{% endif %}</div>
+        <div class="right">{{ e.start }}{% if e.start and e.end %} - {% endif %}{{ e.end }}</div>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Experience -->
+  {% if d.experience and d.experience|length > 0 %}
+  <div class="section-title" style="margin-top:10px;">Experience</div>
+  <div class="rule"></div>
+  <div class="exp">
+    {% for x in d.experience %}
+      <div class="row small">
+        <div class="left"><strong>{{ x.company }}</strong> | {{ x.role }}</div>
+        <div class="right">{{ x.location }}</div>
+      </div>
+      <div class="row small" style="margin-top:2px;">
+        <div class="left"></div>
+        <div class="right">{{ x.start }}{% if x.start and x.end %} - {% endif %}{{ x.end }}</div>
+      </div>
+      {% if x.bullets and x.bullets|length > 0 %}
+      <ul class="bul small">
+        {% for b in x.bullets %}<li>{{ b }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Skills -->
+  {% if d.skillsets and d.skillsets|length > 0 %}
+  <div class="section-title" style="margin-top:10px;">Skills</div>
+  <div class="rule"></div>
+  <div class="skills small">
+    <table class="skills-table">
+      {% for k, v in d.skillsets.items() %}
+        <tr>
+          <td style="width:32%;"><strong>{{ k }}</strong></td>
+          <td>{{ v | join(", ") }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Projects / Open-Source -->
+  {% if d.projects and d.projects|length > 0 %}
+  <div class="section-title" style="margin-top:10px;">Projects / Open-Source</div>
+  <div class="rule"></div>
+  <div class="proj small">
+    {% for p in d.projects %}
+      <div class="row">
+        <div class="left"><strong>{{ p.name }}</strong>{% if p.link %} — <a href="{{ p.link }}">Link</a>{% endif %}</div>
+        <div class="right">{{ p.tech }}</div>
+      </div>
+      {% if p.bullets and p.bullets|length > 0 %}
+      <ul class="bul">
+        {% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Certifications -->
+  {% if d.certifications and d.certifications|length > 0 %}
+  <div class="section-title" style="margin-top:10px;">Certifications</div>
+  <div class="rule"></div>
+  <div class="cert small">
+    <ul class="bul">
+      {% for c in d.certifications %}
+        <li><strong>{{ c.name }}</strong>{% if c.issuer %} — {{ c.issuer }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Additional -->
+  {% if d.additional and d.additional|length > 0 %}
+  {% for sec, items in d.additional.items() %}
+    <div class="section-title" style="margin-top:10px;">{{ sec }}</div>
+    <div class="rule"></div>
+    <div class="additional small">
+      <ul class="bul">
+        {% for it in items %}<li>{{ it }}</li>{% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+  {% endif %}
+
+</body>
+</html>
